@@ -15,7 +15,8 @@ const storedPlaces = storedIds
 
 
 function App() {
-	const modal = useRef();
+	// const modal = useRef();
+  const [modalIsOpen, setModalIsOpen] = useState(false)
 	const selectedPlace = useRef();
 	const [availablePlaces, setAvailablePlaces] = useState([]);
 	const [pickedPlaces, setPickedPlaces] = useState(storedPlaces); //useState would be [] in antipattern version
@@ -42,12 +43,14 @@ function App() {
 	}, []);
 
 	function handleStartRemovePlace(id) {
-		modal.current.open();
+		// modal.current.open();
+    setModalIsOpen(true);
 		selectedPlace.current = id;
 	}
 
 	function handleStopRemovePlace() {
-		modal.current.close();
+		// modal.current.close();
+    setModalIsOpen(false);
 	}
 
 	function handleSelectPlace(id) {
@@ -69,7 +72,8 @@ function App() {
 		setPickedPlaces((prevPickedPlaces) =>
 			prevPickedPlaces.filter((place) => place.id !== selectedPlace.current)
 		);
-		modal.current.close();
+		// modal.current.close();
+    setModalIsOpen(false);
 
 		const storedIds = JSON.parse(localStorage.getItem("selectedPlaces")) || [];
 		localStorage.setItem(
@@ -82,7 +86,8 @@ function App() {
 
 	return (
 		<>
-			<Modal ref={modal}>
+			{/* <Modal ref={modal}> */}
+			<Modal open={modalIsOpen} onClose={handleStopRemovePlace}>
 				<DeleteConfirmation
 					onCancel={handleStopRemovePlace}
 					onConfirm={handleRemovePlace}
@@ -99,13 +104,13 @@ function App() {
 			</header>
 			<main>
 				<Places
-					title="I'd like to visit ..."
+					title="I'd like to visit"
 					fallbackText={"Select the places you would like to visit below."}
 					places={pickedPlaces}
 					onSelectPlace={handleStartRemovePlace}
 				/>
 				<Places
-					title="Available Places"
+					title="Available places"
 					places={availablePlaces}
 					fallbackText="Sorting by distance..."
 					onSelectPlace={handleSelectPlace}
