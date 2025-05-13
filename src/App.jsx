@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 
 import Places from "./components/Places.jsx";
 import { AVAILABLE_PLACES } from "./data.js";
@@ -68,7 +68,8 @@ function App() {
 		}
 	}
 
-	function handleRemovePlace() {
+  //useCallback prevent infinite loop when passing functions as dependencies (onConfirm in DeleteConfirmation)
+  const handleRemovePlace = useCallback(function handleRemovePlace() {
 		setPickedPlaces((prevPickedPlaces) =>
 			prevPickedPlaces.filter((place) => place.id !== selectedPlace.current)
 		);
@@ -82,7 +83,8 @@ function App() {
 				storedIds.filter((id) => id !== selectedPlace.current)
 			)
 		);
-	}
+	}, []); // Add prop or state values in 2nd arg (or state-dependent items like context values, or other fns) if needed.
+	
 
 	return (
 		<>
